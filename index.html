@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>TZC Blockchain Project</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        header {
+            background-color: #f4f4f4;
+            padding: 10px 20px;
+            text-align: center;
+            width: 100%;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>たし算コイン(TZC) Blockchain Project</h1>
+        <p>「たし算コイン(TZC) Blockchain Project」は、小学生を対象にした教育プログラムで、子供たちがブロックチェーンの基本的な仕組みを楽しみながら学ぶことができるユニークな取り組みです。このプロジェクトでは、たし算コイン(TZC)の取引記録を用いて、実際に計算してその紙を並べてみることで、ブロックチェーン技術を擬似体験します。</p>
+        <p>子供たちは、取引記録とたし算の記載された紙を受け取ります。この紙を順番に並べることで一つ一つのページがブロックチェーンの「ブロック」をあらわしています。みんながマイナーとなって計算し、ページをつなげる遊びを通じて、子どもたちはブロックチェーンがどのように各データブロックが連鎖してセキュリティと透明性を保っているかを直感的に理解することができます。</p>
+        <p>たし算コイン(TZC) Blockchain Projectは、教室での活動や家庭での学習に最適です。このプロジェクトを通じて、子どもたちは遊び感覚で学びながら、先端のテクノロジーに対する興味と理解を深め、計算力を向上させられます。興味のある学校や教育者の方々は、ぜひこのプロジェクトを取り入れてみてください。</p>
+    </header>
+    <button id="generate">PDFを生成</button>
+    <script>
+        document.getElementById('generate').addEventListener('click', function() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            const boys = ["Haruto", "Sota", "Yuto", "Minato", "Riku", "Yuito", "Sosuke", "Itsuki", "Koki", "Ren", "Ryusei", "Hinata", "Kaito", "Asahi", "Kanata"];
+            const girls = ["Yui", "Aoi", "Mei", "Sakura", "Himari", "Rin", "Emma", "Hana", "Mio", "Riko", "Misaki", "Ayaka", "Koharu", "Hinata", "Akari"];
+
+            function getRandomTransactionValue() {
+                return [10, 20, 30][Math.floor(Math.random() * 3)];
+            }
+
+            let allTransactions = [];
+
+            function generateTransaction(pageNumber) {
+                const boy = boys[Math.floor(Math.random() * boys.length)];
+                const girl = girls[Math.floor(Math.random() * girls.length)];
+                const tzcAmount = getRandomTransactionValue();
+                const newTransaction = `${girl} to ${boy} ${tzcAmount} TZC`;
+                allTransactions.push(newTransaction);
+                return allTransactions;
+            }
+
+            function generateProblem() {
+                const num1 = Math.floor(Math.random() * 10);
+                const num2 = Math.floor(Math.random() * 10);
+                const num3 = Math.floor(Math.random() * 10);
+                return `${num1} + ${num2} + ${num3} = `;
+            }
+
+            for (let i = 1; i <= 10; i++) {
+                if (i > 1) doc.addPage();
+                doc.setFontSize(16);
+                doc.text(`TASHIZAN COIN (TZC) PROJECT PAGE ${i}`, 20, 20);
+                
+                const transactions = generateTransaction(i);
+
+                doc.setFontSize(12);
+                let yPosTransactions = 40;
+                transactions.forEach(transaction => {
+                    doc.text(transaction, 20, yPosTransactions);
+                    yPosTransactions += 10;
+                });
+
+                let yPos = yPosTransactions + 20;
+                for (let j = 0; j < 10; j++) {
+                    doc.text(generateProblem(), 20, yPos);
+                    yPos += 10;
+                }
+
+                doc.setFontSize(10);
+                doc.text("If you answer correctly first, you get 1 TZC.", 20, 280);
+            }
+            doc.save('TZC_Project.pdf');
+        });
+    </script>
+</body>
+</html>
